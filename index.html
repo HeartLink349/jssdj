@@ -113,7 +113,7 @@
       background: rgba(255,255,255,.06);
     }
     .input i{ color: rgba(255,255,255,.65); }
-    input[type="text"]{
+    input[type="password"]{
       width:100%; border:none; outline:none; background:transparent; color: var(--text);
       font-size:14px; font-weight:800; letter-spacing:.6px; text-align: center;
     }
@@ -154,7 +154,7 @@
     .tval{ font-size: 22px; font-weight:1000; }
     .tlabel{ margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.70); font-weight:900; letter-spacing:1px; text-transform:uppercase; }
 
-    .player, .video-container{
+    .player, .video-wrap{
       margin-top: 14px; padding: 14px; border-radius: 22px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(10,14,30,.45);
@@ -162,8 +162,8 @@
       box-shadow: 0 16px 40px rgba(0,0,0,.30);
       width: 100%;
     }
-    .video-container video { width: 100%; border-radius: 14px; display: block; }
-    
+    .video-wrap video{ width:100%; border-radius:14px; outline:none; }
+
     .player-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
     .track{ display:flex; align-items:center; gap:10px; min-width:0; }
     .disc{
@@ -224,17 +224,22 @@
       flex-direction:column; 
       width: 100%; 
       max-width: 340px; 
+      touch-action: pan-y;
     }
     .imgwrap{ position:relative; overflow:hidden; width: 100%; }
-    .imgwrap img{ width:100%; height:auto; display:block; transition: transform .7s; object-fit: cover; }
+    .imgwrap img{ width:100%; height:auto; display:block; transition: transform .7s cubic-bezier(.2,.8,.2,1); object-fit: cover; }
+    .imgcard:active img{ transform: scale(1.05); }
     .cap{ padding: 12px 10px 15px; font-size: 14px; font-weight:900; color: rgba(255,255,255,.86); text-align:center; }
     .cap .tiny{ display:block; margin-top:2px; font-size: 11px; font-weight:800; color: rgba(255,255,255,.58); }
 
     .cta{ margin-top: 14px; display:flex; justify-content:center; width: 100%; padding-bottom: 20px; }
+    .cta .btn{ width:100%; max-width: 360px; min-width: unset; }
 
     .overlay{
       position:fixed; inset:0;
-      background: rgba(0,0,0,.85);
+      background: radial-gradient(800px 500px at 50% 30%, rgba(255,77,166,.16), transparent 55%),
+                radial-gradient(800px 520px at 50% 75%, rgba(139,92,246,.16), transparent 60%),
+                rgba(0,0,0,.65);
       backdrop-filter: blur(10px);
       display:flex; align-items:center; justify-content:center;
       padding: 18px;
@@ -246,28 +251,60 @@
     .letter{
       width:min(560px, 100%);
       border-radius: 28px; border: 1px solid rgba(255,255,255,.14);
-      background: rgba(10,14,30,.9);
-      padding: 20px;
+      background: rgba(10,14,30,.65);
+      box-shadow: 0 30px 80px rgba(0,0,0,.65);
+      overflow:hidden;
+      transform: translateY(10px) scale(.99);
+      transition: transform .35s ease;
     }
+    .overlay.show .letter{ transform: translateY(0) scale(1); }
+    .letter-head{
+      padding: 16px 16px 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .letter-head .ttl{ font-weight:1000; }
+    .xbtn{
+      width:40px; height:40px; border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      cursor:pointer;
+      display:grid; place-items:center;
+    }
+    .letter-body{ padding: 18px 16px 18px; }
     .line{
-      opacity:0; transform: translateY(10px);
-      transition: .5s;
+      opacity:0; transform: translateY(10px); filter: blur(4px);
+      transition: opacity .55s ease, transform .55s ease, filter .7s ease;
       font-size: 18px; font-weight: 900; line-height: 1.8; text-align:center;
-      margin-bottom: 10px;
     }
-    .line.reveal{ opacity:1; transform: translateY(0); }
+    .line.reveal{ opacity:1; transform: translateY(0); filter: blur(0); }
 
     .toast{
-      position:fixed; left: 50%; bottom: 20px;
+      position:fixed; left: 50%; bottom: 16px;
       transform: translateX(-50%) translateY(20px);
-      padding: 12px 20px; border-radius: 18px;
-      background: rgba(10,14,30,.9);
-      opacity:0; transition: .3s; z-index: 60;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,14,30,.70);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.55);
+      font-weight: 900;
+      font-size: 12px;
+      color: rgba(255,255,255,.9);
+      opacity:0; pointer-events:none;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index: 60;
     }
     .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+    .toast .warn{
+      background: linear-gradient(135deg, #fbbf24, #fb7185);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
 
     @media (max-width: 360px){
       .hero h2{ font-size: 26px; }
+      .tval{ font-size: 20px; }
     }
   </style>
 </head>
@@ -278,38 +315,48 @@
   <div class="app">
     <header>
       <div class="brand">
-        <div class="logo"><i class="fa-solid fa-heart"></i></div>
-        <h1>HeartLink — Valentine</h1>
-        <small>private love page</small>
+        <div class="logo" aria-hidden="true"><i class="fa-solid fa-heart"></i></div>
+        <div style="min-width:0">
+          <h1>HeartLink — Valentine</h1>
+          <small>private love page</small>
+        </div>
       </div>
     </header>
 
     <main>
       <div class="stage">
 
-        <section class="card active" id="page1">
+        <section class="card active" id="page1" aria-label="Password Gate">
           <div class="card-inner">
             <div class="hero">
               <h2><span class="gradtxt">عيد الحب</span> 🩷</h2>
               <p>جاهزه يروحي 💕</p>
             </div>
+
             <div class="login-container">
               <div class="panel">
                 <div class="field">
                   <div class="input">
                     <i class="fa-solid fa-lock"></i>
-                    <input id="pass" type="text" placeholder="اكتبي التاريخ ي❤" />
+                    <input id="pass" type="password" placeholder="اكتبي الباسورد ي❤" />
                   </div>
-                  <button class="btn" id="enterBtn">دوسي هنا لفتح قلبي <i class="fa-solid fa-arrow-left"></i></button>
+                  <button class="btn" id="enterBtn">
+                    دوسي هنا لفتح قلبي
+                    <i class="fa-solid fa-arrow-left"></i>
+                  </button>
                 </div>
               </div>
+              <div class="hint">💗 لمسة بسيطة… وبعدها هتبدأ الحكاية</div>
             </div>
           </div>
         </section>
 
-        <section class="card" id="page2">
+        <section class="card" id="page2" aria-label="Valentine Page">
           <div class="card-inner">
-            <div class="section-title"><span class="gradtxt">بداية حكاياتنا</span> ❤😍</div>
+            <div class="section-title">
+              <span class="gradtxt">بداية حكاياتنا</span> ❤😍
+            </div>
+
             <div class="timer" id="timer">
               <div class="tbox"><div class="tval" id="yy">0</div><div class="tlabel">سنين</div></div>
               <div class="tbox"><div class="tval" id="mm">0</div><div class="tlabel">شهور</div></div>
@@ -319,180 +366,353 @@
               <div class="tbox"><div class="tval" id="ss">0</div><div class="tlabel">ثواني</div></div>
             </div>
 
-            <div class="player">
+            <div class="player" aria-label="Music Player">
               <div class="player-top">
                 <div class="track">
                   <div class="disc"><i class="fa-solid fa-music"></i></div>
-                  <div>
+                  <div style="min-width:0">
                     <div class="track-title">أغنيتنا 🎵</div>
                     <div class="track-sub">بعشقك 😍❤</div>
                   </div>
                 </div>
-                <button class="pbtn" id="playBtn"><i class="fa-solid fa-play"></i></button>
+                <button class="pbtn" id="playBtn" aria-label="Play/Pause">
+                  <i class="fa-solid fa-play"></i>
+                </button>
               </div>
+
               <div class="bar">
                 <div class="time" id="cur">0:00</div>
-                <div class="range" id="seek"><div class="fill" id="fill"></div><div class="knob" id="knob"></div></div>
+                <div class="range" id="seek">
+                  <div class="fill" id="fill"></div>
+                  <div class="knob" id="knob"></div>
+                </div>
                 <div class="time" id="dur">0:00</div>
               </div>
-              <audio id="audio" loop src="https://d.top4top.io/m_36925fg671.mp4"></audio>
+
+              <div class="player-bottom">
+                <button class="btn secondary" id="muteBtn" aria-label="Mute/Unmute">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <div class="vwrap">
+                  <i class="fa-solid fa-volume-low"></i>
+                  <input class="vol" id="vol" type="range" min="0" max="1" step="0.01" value="0.85" />
+                </div>
+              </div>
+
+              <audio id="audio" loop preload="auto" src="https://d.top4top.io/m_36925fg671.mp4"></audio>
             </div>
 
-            <div class="video-container">
-                <video id="mainVideo" controls poster="https://i.top4top.io/p_36923almz1.jpg">
-                    <source src="https://a.top4top.io/m_3692wtig81.mp4" type="video/mp4">
-                </video>
+            <div class="video-wrap">
+              <video id="mainVideo" controls>
+                <source src="https://a.top4top.io/m_3692wtig81.mp4" type="video/mp4">
+              </video>
             </div>
 
             <div class="headline"><span class="gradtxt">بحبك انتي وبس</span> 💗</div>
 
-            <div class="grid">
-              <figure class="imgcard"><div class="imgwrap"><img src="https://i.top4top.io/p_36923almz1.jpg"></div><figcaption class="cap">إنتِ أجمل صدفة</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://j.top4top.io/p_3692f1ym41.jpg"></div><figcaption class="cap">ضحكتك وطن</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://k.top4top.io/p_3692846ad1.jpg"></div><figcaption class="cap">معاكِ كل حاجة أحلى</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://l.top4top.io/p_36927zdzg1.jpg"></div><figcaption class="cap">قلبك أمان</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://b.top4top.io/p_36928yrh21.jpg"></div><figcaption class="cap">كل يوم معاكي عيد</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://c.top4top.io/p_369237mgf1.jpg"></div><figcaption class="cap">بحب تفاصيلك</figcaption></figure>
-              <figure class="imgcard"><div class="imgwrap"><img src="https://d.top4top.io/p_3692zqm281.jpg"></div><figcaption class="cap">دنيتي كلها</figcaption></figure>
+            <div class="grid" aria-label="Gallery">
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://i.top4top.io/p_36923almz1.jpg" alt="صورة 1"></div>
+                <figcaption class="cap">إنتِ أجمل صدفة <span class="tiny">في حياتي كلها</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://j.top4top.io/p_3692f1ym41.jpg" alt="صورة 2"></div>
+                <figcaption class="cap">ضحكتك وطن <span class="tiny">وأنا ساكن فيه</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://k.top4top.io/p_3692846ad1.jpg" alt="صورة 3"></div>
+                <figcaption class="cap">معاكِ كل حاجة <span class="tiny">بتبقى أحلى</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://l.top4top.io/p_36927zdzg1.jpg" alt="صورة 4"></div>
+                <figcaption class="cap">قلبك أمان <span class="tiny">وأنا اختارته</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://b.top4top.io/p_36928yrh21.jpg" alt="صورة 5"></div>
+                <figcaption class="cap">كل يوم معاكي <span class="tiny">عيد</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://c.top4top.io/p_369237mgf1.jpg" alt="صورة 6"></div>
+                <figcaption class="cap">بحب تفاصيلك <span class="tiny">كلها</span></figcaption>
+              </figure>
+              <figure class="imgcard">
+                <div class="imgwrap"><img src="https://d.top4top.io/p_3692zqm281.jpg" alt="صورة 7"></div>
+                <figcaption class="cap">دنيتي كلها <span class="tiny">انتي</span></figcaption>
+              </figure>
             </div>
 
             <div class="cta">
-              <button class="btn" id="msgBtn">دوسي متستعجليش😂❤ <i class="fa-solid fa-wand-magic-sparkles"></i></button>
+              <button class="btn" id="msgBtn">
+                دوسي متستعجليش😂❤
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </button>
             </div>
           </div>
         </section>
+
       </div>
     </main>
   </div>
 
-  <div class="overlay" id="overlay">
-    <div class="letter">
-      <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-        <div class="gradtxt" style="font-weight:bold;">رسالة ليكي 💌</div>
-        <button id="closeOverlay" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="letter" role="dialog" aria-modal="true" aria-label="Message">
+      <div class="letter-head">
+        <div class="ttl">رسالة ليكي 💌</div>
+        <button class="xbtn" id="closeOverlay" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div id="msgText"></div>
+      <div class="letter-body">
+        <div class="line" id="l1">هيمر الوقت وهتمر السنين ..</div>
+        <div class="line" id="l2">وهيفضل حبك ف قلبى يزيد ..</div>
+        <div class="line" id="l3">يا <span class="gradtxt">روح قلبي</span> ♥️🫂</div>
+      </div>
     </div>
   </div>
 
-  <div class="toast" id="toast">الباسورد غلط يا روحي</div>
+  <div class="toast" id="toast"><span class="warn">😅</span> الباسورد غلط… جربي تاني يا روحي</div>
 
   <script>
     const PASSWORD = "14/10/2024";
-    const START_DATE = new Date("2024-10-09T00:00:00");
+    const STORY_START = new Date("2024-10-09T00:00:00"); 
 
-    const passInput = document.getElementById("pass");
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
+    const pass = document.getElementById("pass");
     const enterBtn = document.getElementById("enterBtn");
+    const toast = document.getElementById("toast");
+
     const audio = document.getElementById("audio");
-    const video = document.getElementById("mainVideo");
+    const mainVideo = document.getElementById("mainVideo");
     const playBtn = document.getElementById("playBtn");
 
-    // دخول الصفحة
-    enterBtn.addEventListener("click", () => {
-      if(passInput.value === PASSWORD) {
-        document.getElementById("page1").classList.remove("active");
-        document.getElementById("page2").classList.add("active");
-        audio.play().catch(()=>{});
-      } else {
-        const t = document.getElementById("toast");
-        t.classList.add("show");
-        setTimeout(()=> t.classList.remove("show"), 2000);
-      }
-    });
-
-    // العداد الزمني الدقيق
-    function updateTimer() {
-        const now = new Date();
-        let years = now.getFullYear() - START_DATE.getFullYear();
-        let months = now.getMonth() - START_DATE.getMonth();
-        let days = now.getDate() - START_DATE.getDate();
-
-        if (days < 0) {
-            months--;
-            let lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-            days += lastMonth.getDate();
-        }
-        if (months < 0) {
-            years--;
-            months += 12;
-        }
-
-        const diff = now - START_DATE;
-        document.getElementById("yy").textContent = years;
-        document.getElementById("mm").textContent = months;
-        document.getElementById("dd").textContent = days;
-        document.getElementById("hh").textContent = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
-        document.getElementById("mi").textContent = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
-        document.getElementById("ss").textContent = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+    function showToast(){
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 1700);
     }
-    setInterval(updateTimer, 1000);
 
-    // التحكم في الصوت والفيديو
-    playBtn.addEventListener("click", () => {
-      if(audio.paused) {
-          audio.play();
-          video.pause();
-      } else {
-          audio.pause();
+    function goToPage2(){
+      page1.classList.remove("active");
+      page2.classList.add("active");
+      try{
+        audio.volume = parseFloat(document.getElementById("vol").value || "0.85");
+        // الأغنية لا تبدأ تلقائياً إلا لو تفاعل المستخدم
+      }catch(e){}
+    }
+
+    enterBtn.addEventListener("click", ()=>{
+      if((pass.value || "").trim() === PASSWORD){
+        goToPage2();
+      }else{
+        showToast();
+        pass.focus();
+        pass.select();
       }
     });
 
-    audio.onplay = () => {
-        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
-        video.pause();
-    };
-    audio.onpause = () => playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
-    
-    video.onplay = () => audio.pause();
-    video.onpause = () => { if(audio.paused) audio.play(); };
+    pass.addEventListener("keydown", (e)=>{ if(e.key === "Enter") enterBtn.click(); });
 
-    // شريط تقدم الأغنية
-    audio.ontimeupdate = () => {
-        const p = (audio.currentTime / audio.duration) * 100;
-        document.getElementById("fill").style.width = p + "%";
-        document.getElementById("knob").style.left = p + "%";
-        document.getElementById("cur").textContent = Math.floor(audio.currentTime/60) + ":" + String(Math.floor(audio.currentTime%60)).padStart(2,'0');
-    };
-    audio.onloadedmetadata = () => {
-        document.getElementById("dur").textContent = Math.floor(audio.duration/60) + ":" + String(Math.floor(audio.duration%60)).padStart(2,'0');
-    };
-
-    // رسالة الزر الأخير
-    const msgBtn = document.getElementById("msgBtn");
-    const overlay = document.getElementById("overlay");
-    msgBtn.addEventListener("click", () => {
-        const msg = "هيمر الوقت وهتمر السنين وهيفضل حبك ف قلبى يزيد يا روح قلبي ♥️🫂";
-        document.getElementById("msgText").innerHTML = `<div class="line reveal">${msg}</div>`;
-        overlay.classList.add("show");
+    // تبديل الصوت بين الفيديو والأغنية
+    mainVideo.addEventListener("play", () => {
+      audio.pause();
     });
-    document.getElementById("closeOverlay").addEventListener("click", () => overlay.classList.remove("show"));
 
-    // القلوب المتساقطة
+    mainVideo.addEventListener("pause", () => {
+      // اختيارياً: يمكنك جعل الأغنية تعود للعمل عند إيقاف الفيديو
+      // audio.play().catch(()=>{});
+    });
+
+    const elYY = document.getElementById("yy");
+    const elMM = document.getElementById("mm");
+    const elDD = document.getElementById("dd");
+    const elHH = document.getElementById("hh");
+    const elMI = document.getElementById("mi");
+    const elSS = document.getElementById("ss");
+
+    function diffYMDHMS(from, to){
+      let start = new Date(from.getTime());
+      let end = new Date(to.getTime());
+      if(end < start){ [start, end] = [end, start]; }
+
+      let years = end.getFullYear() - start.getFullYear();
+      let test = new Date(start);
+      test.setFullYear(start.getFullYear() + years);
+      if(test > end){ years--; test.setFullYear(start.getFullYear() + years); }
+
+      let months = (end.getMonth() - test.getMonth());
+      if(months < 0) months += 12;
+      let test2 = new Date(test);
+      test2.setMonth(test.getMonth() + months);
+      if(test2 > end){ months--; test2.setMonth(test.getMonth() + months); }
+
+      let ms = end - test2;
+      const sec = 1000, min = 60*sec, hr = 60*min, day = 24*hr;
+
+      const days = Math.floor(ms / day); ms -= days*day;
+      const hours = Math.floor(ms / hr); ms -= hours*hr;
+      const minutes = Math.floor(ms / min); ms -= minutes*min;
+      const seconds = Math.floor(ms / sec);
+      return {years, months, days, hours, minutes, seconds};
+    }
+    const pad2 = (n)=> String(n).padStart(2,"0");
+    function tick(){
+      const d = diffYMDHMS(STORY_START, new Date());
+      elYY.textContent = d.years;
+      elMM.textContent = d.months;
+      elDD.textContent = d.days;
+      elHH.textContent = pad2(d.hours);
+      elMI.textContent = pad2(d.minutes);
+      elSS.textContent = pad2(d.seconds);
+    }
+    setInterval(tick, 1000); tick();
+
+    const seek = document.getElementById("seek");
+    const fill = document.getElementById("fill");
+    const knob = document.getElementById("knob");
+    const cur = document.getElementById("cur");
+    const dur = document.getElementById("dur");
+    const vol = document.getElementById("vol");
+    const muteBtn = document.getElementById("muteBtn");
+
+    const fmt = (t)=> !isFinite(t) ? "0:00" : `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,"0")}`;
+    const setPlayIcon = (p)=> playBtn.innerHTML = p ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+
+    audio.addEventListener("loadedmetadata", ()=>{ dur.textContent = fmt(audio.duration); });
+    audio.addEventListener("timeupdate", ()=>{
+      const p = (audio.currentTime / (audio.duration || 1)) * 100;
+      fill.style.width = p + "%";
+      knob.style.left = p + "%";
+      cur.textContent = fmt(audio.currentTime);
+    });
+    audio.addEventListener("play", ()=> {
+        setPlayIcon(true);
+        mainVideo.pause(); // عند تشغيل الأغنية يقف الفيديو
+    });
+    audio.addEventListener("pause", ()=> setPlayIcon(false));
+
+    playBtn.addEventListener("click", ()=>{ 
+        if(audio.paused) {
+            audio.play().catch(()=>{});
+        } else {
+            audio.pause();
+        }
+    });
+
+    function seekTo(clientX){
+      const r = seek.getBoundingClientRect();
+      const x = Math.min(Math.max(clientX - r.left, 0), r.width);
+      audio.currentTime = (x / r.width) * (audio.duration || 0);
+    }
+    let isSeeking = false;
+    seek.addEventListener("pointerdown", (e)=>{ isSeeking = true; seek.setPointerCapture(e.pointerId); seekTo(e.clientX); });
+    seek.addEventListener("pointermove", (e)=>{ if(isSeeking) seekTo(e.clientX); });
+    seek.addEventListener("pointerup", ()=>{ isSeeking = false; });
+
+    vol.addEventListener("input", ()=>{
+      audio.volume = parseFloat(vol.value);
+      if(audio.muted && audio.volume > 0) audio.muted = false;
+      syncMuteIcon();
+    });
+    function syncMuteIcon(){
+      const isMuted = audio.muted || audio.volume === 0;
+      muteBtn.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+    }
+    muteBtn.addEventListener("click", ()=>{ audio.muted = !audio.muted; syncMuteIcon(); });
+    syncMuteIcon();
+
+    const overlay = document.getElementById("overlay");
+    const msgBtn = document.getElementById("msgBtn");
+    const closeOverlay = document.getElementById("closeOverlay");
+    const lines = [document.getElementById("l1"), document.getElementById("l2"), document.getElementById("l3")];
+
+    function openOverlay(){
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden","false");
+      lines.forEach(l=>l.classList.remove("reveal"));
+      lines.forEach((l, idx)=> setTimeout(()=>l.classList.add("reveal"), 250 + idx*650));
+    }
+    function closeIt(){ overlay.classList.remove("show"); overlay.setAttribute("aria-hidden","true"); }
+    msgBtn.addEventListener("click", openOverlay);
+    closeOverlay.addEventListener("click", closeIt);
+    overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeIt(); });
+
+    // Falling hearts (canvas)
     const canvas = document.getElementById("hearts");
     const ctx = canvas.getContext("2d");
-    let w, h;
+    let W=0,H=0, DPR=1;
     const hearts = [];
-    function init() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
+    const MAX = 42;
+
+    function resize(){
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.width = Math.floor(window.innerWidth * DPR);
+      H = canvas.height = Math.floor(window.innerHeight * DPR);
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
     }
-    window.onresize = init;
-    init();
-    function createHeart() {
-        return { x: Math.random()*w, y: -20, s: Math.random()*15+10, v: Math.random()*2+1 };
+    window.addEventListener("resize", resize);
+    resize();
+
+    const rand = (a,b)=> a + Math.random()*(b-a);
+    function spawn(){
+      hearts.push({
+        x: rand(0, W),
+        y: rand(-H*0.2, -20),
+        s: rand(10, 22) * DPR,
+        vy: rand(0.55, 1.45) * DPR,
+        vx: rand(-0.30, 0.30) * DPR,
+        rot: rand(0, Math.PI*2),
+        vr: rand(-0.015, 0.015),
+        a: rand(0.45, 0.85),
+        c: Math.random() < 0.6
+      });
+      if(hearts.length > MAX) hearts.shift();
     }
-    for(let i=0; i<30; i++) hearts.push(createHeart());
-    function draw() {
-        ctx.clearRect(0,0,w,h);
-        ctx.fillStyle = "#ff4da6";
-        hearts.forEach(p => {
-            p.y += p.v;
-            if(p.y > h) p.y = -20;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.s/2, 0, Math.PI*2);
-            ctx.fill();
-        });
-        requestAnimationFrame(draw);
+    for(let i=0;i<MAX;i++) spawn();
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(const h of hearts){
+        h.y += h.vy;
+        h.x += h.vx + Math.sin(h.y*0.002)*0.25*DPR;
+        h.rot += h.vr;
+
+        const grad = ctx.createLinearGradient(h.x-h.s, h.y-h.s, h.x+h.s, h.y+h.s);
+        if(h.c){
+          grad.addColorStop(0, `rgba(255,77,166,${h.a})`);
+          grad.addColorStop(1, `rgba(139,92,246,${h.a*0.9})`);
+        }else{
+          grad.addColorStop(0, `rgba(139,92,246,${h.a})`);
+          grad.addColorStop(1, `rgba(34,211,238,${h.a*0.8})`);
+        }
+        ctx.fillStyle = grad;
+        ctx.shadowColor = "rgba(255,77,166,.18)";
+        ctx.shadowBlur = 18*DPR;
+
+        ctx.save();
+        ctx.translate(h.x, h.y);
+        ctx.rotate(h.rot);
+        ctx.beginPath();
+        const s = h.s, r = s/2;
+        ctx.moveTo(0, r*0.35);
+        ctx.bezierCurveTo(0, -r*0.6, -r, -r*0.2, -r, r*0.35);
+        ctx.bezierCurveTo(-r, r*1.1, 0, r*1.2, 0, r*1.75);
+        ctx.bezierCurveTo(0, r*1.2, r, r*1.1, r, r*0.35);
+        ctx.bezierCurveTo(r, -r*0.2, 0, -r*0.6, 0, r*0.35);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        if(h.y - h.s > H + 30*DPR){
+          h.y = rand(-H*0.25, -20);
+          h.x = rand(0, W);
+          h.vy = rand(0.6, 1.55) * DPR;
+          h.vx = rand(-0.35, 0.35) * DPR;
+          h.s = rand(10, 22) * DPR;
+          h.a = rand(0.45, 0.85);
+          h.c = Math.random() < 0.6;
+        }
+      }
+      if(Math.random() < 0.03) spawn();
+      requestAnimationFrame(draw);
     }
     draw();
   </script>
