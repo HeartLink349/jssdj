@@ -447,6 +447,29 @@
                 </video>
             </div>
 
+            <div class="player" id="videoAudioPlayer" aria-label="Video Audio Controller">
+              <div class="player-top">
+                <div class="track">
+                  <div class="disc"><i class="fa-solid fa-video"></i></div>
+                  <div style="min-width:0">
+                    <div class="track-title">صوت الفيديو 🎬</div>
+                    <div class="track-sub">لحظاتنا سوا</div>
+                  </div>
+                </div>
+                <button class="pbtn" id="vPlayBtn">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+              </div>
+              <div class="bar">
+                <div class="time" id="vCur">0:00</div>
+                <div class="range" id="vSeek">
+                  <div class="fill" id="vFill"></div>
+                  <div class="knob" id="vKnob"></div>
+                </div>
+                <div class="time" id="vDur">0:00</div>
+              </div>
+            </div>
+
             <div class="cta">
               <button class="btn" id="msgBtn">
                 دوس متستعجلش😂❤
@@ -561,7 +584,7 @@
     }
     setInterval(tick, 1000); tick();
 
-    // مشغل الصوت
+    // مشغل الصوت الأساسي
     const seek = document.getElementById("seek");
     const fill = document.getElementById("fill");
     const knob = document.getElementById("knob");
@@ -583,18 +606,61 @@
     audio.addEventListener("play", ()=> setPlayIcon(true));
     audio.addEventListener("pause", ()=> setPlayIcon(false));
 
-    playBtn.addEventListener("click", ()=>{ audio.paused ? audio.play() : audio.pause(); });
+    playBtn.addEventListener("click", ()=>{ 
+      if(audio.paused) {
+        video.pause(); // وقف الفيديو لو شغال
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
 
-    // التحكم في التداخل بين الفيديو والأغنية
+    // --- مشغل صوت الفيديو الجديد ---
+    const vPlayBtn = document.getElementById("vPlayBtn");
+    const vSeek = document.getElementById("vSeek");
+    const vFill = document.getElementById("vFill");
+    const vKnob = document.getElementById("vKnob");
+    const vCur = document.getElementById("vCur");
+    const vDur = document.getElementById("vDur");
+
+    video.addEventListener("loadedmetadata", () => { vDur.textContent = fmt(video.duration); });
+    video.addEventListener("timeupdate", () => {
+        const p = (video.currentTime / (video.duration || 1)) * 100;
+        vFill.style.width = p + "%";
+        vKnob.style.left = p + "%";
+        vCur.textContent = fmt(video.currentTime);
+    });
+
+    vPlayBtn.addEventListener("click", () => {
+        if (video.paused) {
+            audio.pause(); // وقف الأغنية الأساسية
+            video.play();
+        } else {
+            video.pause();
+        }
+    });
+
+    // تحديث أيقونة الفيديو
+    const setVPlayIcon = (p) => vPlayBtn.innerHTML = p ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
     video.addEventListener("play", () => {
-        if (!audio.paused) audio.pause();
+        setVPlayIcon(true);
+        if(!audio.paused) audio.pause();
     });
     video.addEventListener("pause", () => {
-        audio.play().catch(e => {});
+        setVPlayIcon(false);
     });
-    video.addEventListener("ended", () => {
-        audio.play().catch(e => {});
-    });
+
+    // التحكم في الـ Seek للفيديو
+    function seekVideo(clientX) {
+        const r = vSeek.getBoundingClientRect();
+        const x = Math.min(Math.max(clientX - r.left, 0), r.width);
+        video.currentTime = (x / r.width) * (video.duration || 0);
+    }
+    let isVSeeking = false;
+    vSeek.addEventListener("pointerdown", (e) => { isVSeeking = true; vSeek.setPointerCapture(e.pointerId); seekVideo(e.clientX); });
+    vSeek.addEventListener("pointermove", (e) => { if(isVSeeking) seekVideo(e.clientX); });
+    vSeek.addEventListener("pointerup", () => { isVSeeking = false; });
+    // --- نهاية مشغل الفيديو ---
 
     function seekTo(clientX){
       const r = seek.getBoundingClientRect();
