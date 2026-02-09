@@ -113,7 +113,7 @@
       background: rgba(255,255,255,.06);
     }
     .input i{ color: rgba(255,255,255,.65); }
-    input[type="password"]{
+    input[type="text"]{
       width:100%; border:none; outline:none; background:transparent; color: var(--text);
       font-size:14px; font-weight:800; letter-spacing:.6px; text-align: center;
     }
@@ -154,7 +154,7 @@
     .tval{ font-size: 22px; font-weight:1000; }
     .tlabel{ margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.70); font-weight:900; letter-spacing:1px; text-transform:uppercase; }
 
-    .player, .video-wrap{
+    .player, .video-container{
       margin-top: 14px; padding: 14px; border-radius: 22px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(10,14,30,.45);
@@ -162,8 +162,6 @@
       box-shadow: 0 16px 40px rgba(0,0,0,.30);
       width: 100%;
     }
-    .video-wrap video{ width:100%; border-radius:14px; outline:none; }
-
     .player-top{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
     .track{ display:flex; align-items:center; gap:10px; min-width:0; }
     .disc{
@@ -204,6 +202,12 @@
     .vwrap i{ color: rgba(255,255,255,.7); }
     input[type="range"].vol{ width:100%; accent-color: var(--pink); }
 
+    .video-container video {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
     .headline{ margin: 14px 0 8px; text-align:center; font-size: 18px; font-weight:1000; width: 100%; }
 
     .grid{ 
@@ -232,7 +236,7 @@
     .cap{ padding: 12px 10px 15px; font-size: 14px; font-weight:900; color: rgba(255,255,255,.86); text-align:center; }
     .cap .tiny{ display:block; margin-top:2px; font-size: 11px; font-weight:800; color: rgba(255,255,255,.58); }
 
-    .cta{ margin-top: 14px; display:flex; justify-content:center; width: 100%; padding-bottom: 20px; }
+    .cta{ margin-top: 14px; display:flex; justify-content:center; width: 100%; }
     .cta .btn{ width:100%; max-width: 360px; min-width: unset; }
 
     .overlay{
@@ -338,7 +342,7 @@
                 <div class="field">
                   <div class="input">
                     <i class="fa-solid fa-lock"></i>
-                    <input id="pass" type="password" placeholder="اكتبي الباسورد ي❤" />
+                    <input id="pass" type="text" placeholder="اكتبي الباسورد ي❤" />
                   </div>
                   <button class="btn" id="enterBtn">
                     دوسي هنا لفتح قلبي
@@ -376,7 +380,7 @@
                   </div>
                 </div>
                 <button class="pbtn" id="playBtn" aria-label="Play/Pause">
-                  <i class="fa-solid fa-play"></i>
+                  <i class="fa-solid fa-pause"></i>
                 </button>
               </div>
 
@@ -400,12 +404,6 @@
               </div>
 
               <audio id="audio" loop preload="auto" src="https://d.top4top.io/m_36925fg671.mp4"></audio>
-            </div>
-
-            <div class="video-wrap">
-              <video id="mainVideo" controls>
-                <source src="https://a.top4top.io/m_3692wtig81.mp4" type="video/mp4">
-              </video>
             </div>
 
             <div class="headline"><span class="gradtxt">بحبك انتي وبس</span> 💗</div>
@@ -437,8 +435,16 @@
               </figure>
               <figure class="imgcard">
                 <div class="imgwrap"><img src="https://d.top4top.io/p_3692zqm281.jpg" alt="صورة 7"></div>
-                <figcaption class="cap">دنيتي كلها <span class="tiny">انتي</span></figcaption>
+                <figcaption class="cap">يا نور عيني <span class="tiny">يا كل حياتي</span></figcaption>
               </figure>
+            </div>
+
+            <div class="headline"><span class="gradtxt">فيديو لينا</span> 🎥</div>
+            <div class="video-container">
+                <video id="mainVideo" controls preload="metadata">
+                    <source src="https://a.top4top.io/m_3692wtig81.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
             <div class="cta">
@@ -461,9 +467,9 @@
         <button class="xbtn" id="closeOverlay" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="letter-body">
-        <div class="line" id="l1">هيمر الوقت وهتمر السنين ..</div>
-        <div class="line" id="l2">وهيفضل حبك ف قلبى يزيد ..</div>
-        <div class="line" id="l3">يا <span class="gradtxt">روح قلبي</span> ♥️🫂</div>
+        <div class="line" id="l1">هيمر الوقت وهتمر السنين..</div>
+        <div class="line" id="l2">وهيفضل حبك ف قلبى يزيد..</div>
+        <div class="line" id="l3">يا روح قلبي ♥️🫂</div>
       </div>
     </div>
   </div>
@@ -481,7 +487,7 @@
     const toast = document.getElementById("toast");
 
     const audio = document.getElementById("audio");
-    const mainVideo = document.getElementById("mainVideo");
+    const video = document.getElementById("mainVideo");
     const playBtn = document.getElementById("playBtn");
 
     function showToast(){
@@ -492,10 +498,10 @@
     function goToPage2(){
       page1.classList.remove("active");
       page2.classList.add("active");
-      try{
-        audio.volume = parseFloat(document.getElementById("vol").value || "0.85");
-        // الأغنية لا تبدأ تلقائياً إلا لو تفاعل المستخدم
-      }catch(e){}
+      setTimeout(() => {
+          audio.volume = parseFloat(document.getElementById("vol").value || "0.85");
+          audio.play().catch(e => console.log("Auto-play blocked, user needs to interact."));
+      }, 500);
     }
 
     enterBtn.addEventListener("click", ()=>{
@@ -510,16 +516,7 @@
 
     pass.addEventListener("keydown", (e)=>{ if(e.key === "Enter") enterBtn.click(); });
 
-    // تبديل الصوت بين الفيديو والأغنية
-    mainVideo.addEventListener("play", () => {
-      audio.pause();
-    });
-
-    mainVideo.addEventListener("pause", () => {
-      // اختيارياً: يمكنك جعل الأغنية تعود للعمل عند إيقاف الفيديو
-      // audio.play().catch(()=>{});
-    });
-
+    // العداد المعدل
     const elYY = document.getElementById("yy");
     const elMM = document.getElementById("mm");
     const elDD = document.getElementById("dd");
@@ -564,6 +561,7 @@
     }
     setInterval(tick, 1000); tick();
 
+    // مشغل الصوت
     const seek = document.getElementById("seek");
     const fill = document.getElementById("fill");
     const knob = document.getElementById("knob");
@@ -582,18 +580,20 @@
       knob.style.left = p + "%";
       cur.textContent = fmt(audio.currentTime);
     });
-    audio.addEventListener("play", ()=> {
-        setPlayIcon(true);
-        mainVideo.pause(); // عند تشغيل الأغنية يقف الفيديو
-    });
+    audio.addEventListener("play", ()=> setPlayIcon(true));
     audio.addEventListener("pause", ()=> setPlayIcon(false));
 
-    playBtn.addEventListener("click", ()=>{ 
-        if(audio.paused) {
-            audio.play().catch(()=>{});
-        } else {
-            audio.pause();
-        }
+    playBtn.addEventListener("click", ()=>{ audio.paused ? audio.play() : audio.pause(); });
+
+    // التحكم في التداخل بين الفيديو والأغنية
+    video.addEventListener("play", () => {
+        if (!audio.paused) audio.pause();
+    });
+    video.addEventListener("pause", () => {
+        audio.play().catch(e => {});
+    });
+    video.addEventListener("ended", () => {
+        audio.play().catch(e => {});
     });
 
     function seekTo(clientX){
@@ -634,7 +634,7 @@
     closeOverlay.addEventListener("click", closeIt);
     overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeIt(); });
 
-    // Falling hearts (canvas)
+    // خلفية القلوب
     const canvas = document.getElementById("hearts");
     const ctx = canvas.getContext("2d");
     let W=0,H=0, DPR=1;
