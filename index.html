@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     :root{
-      --bg0:#0b1020;
-      --bg1:#0a0f1f;
+      --bg0:#1a0505;
+      --bg1:#0d0202;
       --text:#f8fafc;
-      --pink:#ff4da6;
-      --violet:#8b5cf6;
-      --cyan:#22d3ee;
+      --pink:#ff1e1e;
+      --violet:#9b0000;
+      --cyan:#ff4d4d;
       --shadow: 0 28px 60px rgba(0,0,0,.55);
     }
     *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; font-family: "Segoe UI", system-ui, sans-serif; }
@@ -23,18 +23,18 @@
       color:var(--text);
       overflow:hidden;
       background:
-        radial-gradient(900px 500px at 20% 10%, rgba(255,77,166,.20), transparent 60%),
-        radial-gradient(800px 500px at 80% 20%, rgba(139,92,246,.18), transparent 60%),
-        radial-gradient(700px 450px at 40% 85%, rgba(34,211,238,.12), transparent 60%),
+        radial-gradient(900px 500px at 20% 10%, rgba(255,30,30,.20), transparent 60%),
+        radial-gradient(800px 500px at 80% 20%, rgba(155,0,0,.18), transparent 60%),
+        radial-gradient(700px 450px at 40% 85%, rgba(255,77,77,.12), transparent 60%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
     }
     .glow{
       position:fixed; inset:-100px; pointer-events:none; z-index:-2;
       filter: blur(60px); opacity:.55;
       background:
-        radial-gradient(500px 380px at 20% 20%, rgba(255,77,166,.30), transparent 60%),
-        radial-gradient(520px 400px at 85% 25%, rgba(139,92,246,.28), transparent 65%),
-        radial-gradient(420px 320px at 45% 90%, rgba(34,211,238,.18), transparent 60%);
+        radial-gradient(500px 380px at 20% 20%, rgba(255,30,30,.30), transparent 60%),
+        radial-gradient(520px 400px at 85% 25%, rgba(155,0,0,.28), transparent 65%),
+        radial-gradient(420px 320px at 45% 90%, rgba(255,77,77,.18), transparent 60%);
       animation: floaty 12s ease-in-out infinite alternate;
     }
     @keyframes floaty{
@@ -48,7 +48,7 @@
     .brand{ display:flex; align-items:center; flex-direction: column; gap:4px; min-width:0; text-align: center; }
     .logo{
       width:42px; height:42px; border-radius:14px; display:grid; place-items:center;
-      background: linear-gradient(135deg, rgba(255,77,166,.22), rgba(139,92,246,.18));
+      background: linear-gradient(135deg, rgba(255,30,30,.22), rgba(155,0,0,.18));
       border: 1px solid rgba(255,255,255,.14);
       box-shadow: 0 10px 24px rgba(0,0,0,.35);
       backdrop-filter: blur(14px);
@@ -121,8 +121,8 @@
 
     .btn{
       border:none; cursor:pointer; padding: 16px 14px; border-radius: 18px; font-weight:1000;
-      color:#0b1020; background: linear-gradient(135deg, var(--pink), var(--violet));
-      box-shadow: 0 14px 28px rgba(255,77,166,0.22);
+      color:#fff; background: linear-gradient(135deg, var(--pink), var(--violet));
+      box-shadow: 0 14px 28px rgba(255,30,30,0.22);
       transition: transform .12s ease;
       display:flex; align-items:center; justify-content:center; gap:10px;
       width: 100%; white-space:nowrap; font-size: 16px;
@@ -146,15 +146,15 @@
     }
     .tbox::before{
       content:""; position:absolute; inset:-40px;
-      background: radial-gradient(circle at 20% 20%, rgba(255,77,166,.18), transparent 55%),
-                radial-gradient(circle at 80% 80%, rgba(139,92,246,.16), transparent 55%);
+      background: radial-gradient(circle at 20% 20%, rgba(255,30,30,.18), transparent 55%),
+                radial-gradient(circle at 80% 80%, rgba(155,0,0,.16), transparent 55%);
       filter: blur(18px); opacity:.9;
     }
     .tbox > *{ position:relative; z-index:1; }
     .tval{ font-size: 22px; font-weight:1000; }
     .tlabel{ margin-top: 4px; font-size: 11px; color: rgba(255,255,255,.70); font-weight:900; letter-spacing:1px; text-transform:uppercase; }
 
-    .player, .video-container{
+    .player{
       margin-top: 14px; padding: 14px; border-radius: 22px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(10,14,30,.45);
@@ -166,7 +166,7 @@
     .track{ display:flex; align-items:center; gap:10px; min-width:0; }
     .disc{
       width:42px; height:42px; border-radius:16px;
-      background: linear-gradient(135deg, rgba(255,77,166,.22), rgba(139,92,246,.18));
+      background: linear-gradient(135deg, rgba(255,30,30,.22), rgba(155,0,0,.18));
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       box-shadow: 0 10px 24px rgba(0,0,0,.25);
@@ -194,19 +194,13 @@
       position:absolute; top:50%; width: 16px; height:16px; border-radius: 50%;
       background:#fff; transform: translate(-50%, -50%); left: 0%;
       box-shadow: 0 10px 24px rgba(0,0,0,.30);
-      border: 3px solid rgba(255,77,166,.35);
+      border: 3px solid rgba(255,30,30,.35);
       pointer-events:none;
     }
     .player-bottom{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top: 12px; }
     .vwrap{ display:flex; align-items:center; gap:8px; width:45%; }
     .vwrap i{ color: rgba(255,255,255,.7); }
     input[type="range"].vol{ width:100%; accent-color: var(--pink); }
-
-    .video-container video {
-      width: 100%;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-    }
 
     .headline{ margin: 14px 0 8px; text-align:center; font-size: 18px; font-weight:1000; width: 100%; }
 
@@ -241,8 +235,8 @@
 
     .overlay{
       position:fixed; inset:0;
-      background: radial-gradient(800px 500px at 50% 30%, rgba(255,77,166,.16), transparent 55%),
-                radial-gradient(800px 520px at 50% 75%, rgba(139,92,246,.16), transparent 60%),
+      background: radial-gradient(800px 500px at 50% 30%, rgba(255,30,30,.16), transparent 55%),
+                radial-gradient(800px 520px at 50% 75%, rgba(155,0,0,.16), transparent 60%),
                 rgba(0,0,0,.65);
       backdrop-filter: blur(10px);
       display:flex; align-items:center; justify-content:center;
@@ -322,7 +316,7 @@
         <div class="logo" aria-hidden="true"><i class="fa-solid fa-heart"></i></div>
         <div style="min-width:0">
           <h1>HeartLink — Valentine</h1>
-          <small>private love page</small>
+          <small>صفحة حب خاصة لينا</small>
         </div>
       </div>
     </header>
@@ -333,8 +327,8 @@
         <section class="card active" id="page1" aria-label="Password Gate">
           <div class="card-inner">
             <div class="hero">
-              <h2><span class="gradtxt">عيد الحب</span> 🩷</h2>
-              <p>جاهز يا روحي؟ 💕</p>
+              <h2><span class="gradtxt">عيد حب سعيد</span> 🩷</h2>
+              <p>جاهزة يا روحي؟ 💕</p>
             </div>
 
             <div class="login-container">
@@ -342,15 +336,15 @@
                 <div class="field">
                   <div class="input">
                     <i class="fa-solid fa-lock"></i>
-                    <input id="pass" type="text" placeholder="اكتب الباسورد يا قلبي❤" />
+                    <input id="pass" type="text" placeholder="اكتبي الباسورد يا قلبي❤" />
                   </div>
                   <button class="btn" id="enterBtn">
-                    دوس هنا عشان تفتح قلبي
+                    دوسي هنا لفتح قلبي
                     <i class="fa-solid fa-arrow-left"></i>
                   </button>
                 </div>
               </div>
-              <div class="hint">💗 لمسة بسيطة… وبعدها هتبدأ حكايتنا</div>
+              <div class="hint">💗 لمسة بسيطة… وبعدها هتبدأ الحكاية</div>
             </div>
           </div>
         </section>
@@ -358,7 +352,7 @@
         <section class="card" id="page2" aria-label="Valentine Page">
           <div class="card-inner">
             <div class="section-title">
-              <span class="gradtxt">بداية حكايتنا</span> ❤😍
+              <span class="gradtxt">بقيتِ معايا من زمان</span> ❤😍
             </div>
 
             <div class="timer" id="timer">
@@ -403,76 +397,41 @@
                 </div>
               </div>
 
-              <audio id="audio" loop preload="auto" src="https://d.top4top.io/m_36925fg671.mp4"></audio>
+              <audio id="audio" loop preload="auto" src="https://d.top4top.io/m_3692m89pz1.mp4"></audio>
             </div>
 
-            <div class="headline"><span class="gradtxt">بحبك إنت وبس</span> 💗</div>
+            <div class="headline"><span class="gradtxt">بحبك إنتِ وبس</span> 💗</div>
 
             <div class="grid" aria-label="Gallery">
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://i.top4top.io/p_36923almz1.jpg" alt="صورة 1"></div>
-                <figcaption class="cap">إنت أجمل صدفة <span class="tiny">في حياتي كلها</span></figcaption>
+                <div class="imgwrap"><img src="https://files.catbox.moe/vhvc6m.jpg" alt="صورة 1"></div>
+                <figcaption class="cap">إنتِ أجمل صدفة <span class="tiny">في حياتي كلها</span></figcaption>
               </figure>
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://j.top4top.io/p_3692f1ym41.jpg" alt="صورة 2"></div>
+                <div class="imgwrap"><img src="https://files.catbox.moe/o351kp.jpg" alt="صورة 2"></div>
                 <figcaption class="cap">ضحكتك وطن <span class="tiny">وأنا ساكن فيه</span></figcaption>
               </figure>
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://k.top4top.io/p_3692846ad1.jpg" alt="صورة 3"></div>
-                <figcaption class="cap">معاك كل حاجة <span class="tiny">بتبقى أحلى</span></figcaption>
+                <div class="imgwrap"><img src="https://files.catbox.moe/5ryowt.jpg" alt="صورة 3"></div>
+                <figcaption class="cap">معاكِ كل حاجة <span class="tiny">بتبقى أحلى</span></figcaption>
               </figure>
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://l.top4top.io/p_36927zdzg1.jpg" alt="صورة 4"></div>
+                <div class="imgwrap"><img src="https://files.catbox.moe/pcqf9h.jpg" alt="صورة 4"></div>
                 <figcaption class="cap">قلبك أمان <span class="tiny">وأنا اختارته</span></figcaption>
               </figure>
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://b.top4top.io/p_36928yrh21.jpg" alt="صورة 5"></div>
-                <figcaption class="cap">كل يوم معاك <span class="tiny">عيد</span></figcaption>
+                <div class="imgwrap"><img src="https://files.catbox.moe/r1z18a.jpg" alt="صورة 5"></div>
+                <figcaption class="cap">كل يوم معاكي <span class="tiny">عيد</span></figcaption>
               </figure>
               <figure class="imgcard">
-                <div class="imgwrap"><img src="https://c.top4top.io/p_369237mgf1.jpg" alt="صورة 6"></div>
+                <div class="imgwrap"><img src="https://files.catbox.moe/z77ibh.jpg" alt="صورة 6"></div>
                 <figcaption class="cap">بحب تفاصيلك <span class="tiny">كلها</span></figcaption>
               </figure>
-              <figure class="imgcard">
-                <div class="imgwrap"><img src="https://d.top4top.io/p_3692zqm281.jpg" alt="صورة 7"></div>
-                <figcaption class="cap">يا نور عيني <span class="tiny">يا كل حياتي</span></figcaption>
-              </figure>
-            </div>
-
-            <div class="headline"><span class="gradtxt">فيديو لينا</span> 🎥</div>
-            <div class="video-container">
-                <video id="mainVideo" controls preload="metadata">
-                    <source src="https://g.top4top.io/m_36922s7by1.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-
-            <div class="player" id="videoAudioPlayer" aria-label="Video Audio Controller">
-              <div class="player-top">
-                <div class="track">
-                  <div class="disc"><i class="fa-solid fa-video"></i></div>
-                  <div style="min-width:0">
-                    <div class="track-title">♥</div>
-                    <div class="track-sub">لحظاتنا سوا</div>
-                  </div>
-                </div>
-                <button class="pbtn" id="vPlayBtn">
-                  <i class="fa-solid fa-play"></i>
-                </button>
-              </div>
-              <div class="bar">
-                <div class="time" id="vCur">0:00</div>
-                <div class="range" id="vSeek">
-                  <div class="fill" id="vFill"></div>
-                  <div class="knob" id="vKnob"></div>
-                </div>
-                <div class="time" id="vDur">0:00</div>
-              </div>
             </div>
 
             <div class="cta">
               <button class="btn" id="msgBtn">
-                دوس متستعجلش😂❤
+                دوسي متستعجليش😂❤
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
               </button>
             </div>
@@ -486,22 +445,22 @@
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="letter" role="dialog" aria-modal="true" aria-label="Message">
       <div class="letter-head">
-        <div class="ttl">رسالة ليك 💌</div>
+        <div class="ttl">رسالة ليكي 💌</div>
         <button class="xbtn" id="closeOverlay" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="letter-body">
-        <div class="line" id="l1">هيمر الوقت وهتمر السنين..</div>
-        <div class="line" id="l2">وهيفضل حبك ف قلبي يزيد..</div>
-        <div class="line" id="l3">يا روح قلبي ♥️🫂</div>
+        <div class="line" id="l1">تغيب الشمس والناس تنام ..</div>
+        <div class="line" id="l2">يغيب القمر ويزيد الظلام ..</div>
+        <div class="line" id="l3">لكن تغيب <span class="gradtxt">إنتِ</span> ده حرام</div>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast"><span class="warn">😅</span> الباسورد غلط… جرب تاني يا روحي</div>
+  <div class="toast" id="toast"><span class="warn">😅</span> الباسورد غلط… جربي تاني يا روحي</div>
 
   <script>
-    const PASSWORD = "14/10/2024";
-    const STORY_START = new Date("2024-10-09T00:00:00"); 
+    const PASSWORD = "8/24";
+    const STORY_START = new Date("2021-05-20T00:00:00"); 
 
     const page1 = document.getElementById("page1");
     const page2 = document.getElementById("page2");
@@ -510,7 +469,6 @@
     const toast = document.getElementById("toast");
 
     const audio = document.getElementById("audio");
-    const video = document.getElementById("mainVideo");
     const playBtn = document.getElementById("playBtn");
 
     function showToast(){
@@ -521,10 +479,10 @@
     function goToPage2(){
       page1.classList.remove("active");
       page2.classList.add("active");
-      setTimeout(() => {
-          audio.volume = parseFloat(document.getElementById("vol").value || "0.85");
-          audio.play().catch(e => console.log("Auto-play blocked, user needs to interact."));
-      }, 500);
+      try{
+        audio.volume = parseFloat(document.getElementById("vol").value || "0.85");
+        audio.play().catch(()=>{});
+      }catch(e){}
     }
 
     enterBtn.addEventListener("click", ()=>{
@@ -539,7 +497,6 @@
 
     pass.addEventListener("keydown", (e)=>{ if(e.key === "Enter") enterBtn.click(); });
 
-    // العداد المعدل
     const elYY = document.getElementById("yy");
     const elMM = document.getElementById("mm");
     const elDD = document.getElementById("dd");
@@ -547,31 +504,31 @@
     const elMI = document.getElementById("mi");
     const elSS = document.getElementById("ss");
 
+    // الفانكشن دي اتظبطت عشان تمنع السوالب وتطرح التاريخ صح
     function diffYMDHMS(from, to){
-      let start = new Date(from.getTime());
-      let end = new Date(to.getTime());
-      if(end < start){ [start, end] = [end, start]; }
+      let start = new Date(from);
+      let end = new Date(to);
 
       let years = end.getFullYear() - start.getFullYear();
-      let test = new Date(start);
-      test.setFullYear(start.getFullYear() + years);
-      if(test > end){ years--; test.setFullYear(start.getFullYear() + years); }
+      let months = end.getMonth() - start.getMonth();
+      let days = end.getDate() - start.getDate();
+      let hours = end.getHours() - start.getHours();
+      let minutes = end.getMinutes() - start.getMinutes();
+      let seconds = end.getSeconds() - start.getSeconds();
 
-      let months = (end.getMonth() - test.getMonth());
-      if(months < 0) months += 12;
-      let test2 = new Date(test);
-      test2.setMonth(test.getMonth() + months);
-      if(test2 > end){ months--; test2.setMonth(test.getMonth() + months); }
+      if (seconds < 0) { seconds += 60; minutes--; }
+      if (minutes < 0) { minutes += 60; hours--; }
+      if (hours < 0) { hours += 24; days--; }
+      if (days < 0) {
+        let prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+        days += prevMonth.getDate();
+        months--;
+      }
+      if (months < 0) { months += 12; years--; }
 
-      let ms = end - test2;
-      const sec = 1000, min = 60*sec, hr = 60*min, day = 24*hr;
-
-      const days = Math.floor(ms / day); ms -= days*day;
-      const hours = Math.floor(ms / hr); ms -= hours*hr;
-      const minutes = Math.floor(ms / min); ms -= minutes*min;
-      const seconds = Math.floor(ms / sec);
       return {years, months, days, hours, minutes, seconds};
     }
+
     const pad2 = (n)=> String(n).padStart(2,"0");
     function tick(){
       const d = diffYMDHMS(STORY_START, new Date());
@@ -584,7 +541,6 @@
     }
     setInterval(tick, 1000); tick();
 
-    // مشغل الصوت الأساسي
     const seek = document.getElementById("seek");
     const fill = document.getElementById("fill");
     const knob = document.getElementById("knob");
@@ -606,61 +562,7 @@
     audio.addEventListener("play", ()=> setPlayIcon(true));
     audio.addEventListener("pause", ()=> setPlayIcon(false));
 
-    playBtn.addEventListener("click", ()=>{ 
-      if(audio.paused) {
-        video.pause(); // وقف الفيديو لو شغال
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    });
-
-    // --- مشغل صوت الفيديو الجديد ---
-    const vPlayBtn = document.getElementById("vPlayBtn");
-    const vSeek = document.getElementById("vSeek");
-    const vFill = document.getElementById("vFill");
-    const vKnob = document.getElementById("vKnob");
-    const vCur = document.getElementById("vCur");
-    const vDur = document.getElementById("vDur");
-
-    video.addEventListener("loadedmetadata", () => { vDur.textContent = fmt(video.duration); });
-    video.addEventListener("timeupdate", () => {
-        const p = (video.currentTime / (video.duration || 1)) * 100;
-        vFill.style.width = p + "%";
-        vKnob.style.left = p + "%";
-        vCur.textContent = fmt(video.currentTime);
-    });
-
-    vPlayBtn.addEventListener("click", () => {
-        if (video.paused) {
-            audio.pause(); // وقف الأغنية الأساسية
-            video.play();
-        } else {
-            video.pause();
-        }
-    });
-
-    // تحديث أيقونة الفيديو
-    const setVPlayIcon = (p) => vPlayBtn.innerHTML = p ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
-    video.addEventListener("play", () => {
-        setVPlayIcon(true);
-        if(!audio.paused) audio.pause();
-    });
-    video.addEventListener("pause", () => {
-        setVPlayIcon(false);
-    });
-
-    // التحكم في الـ Seek للفيديو
-    function seekVideo(clientX) {
-        const r = vSeek.getBoundingClientRect();
-        const x = Math.min(Math.max(clientX - r.left, 0), r.width);
-        video.currentTime = (x / r.width) * (video.duration || 0);
-    }
-    let isVSeeking = false;
-    vSeek.addEventListener("pointerdown", (e) => { isVSeeking = true; vSeek.setPointerCapture(e.pointerId); seekVideo(e.clientX); });
-    vSeek.addEventListener("pointermove", (e) => { if(isVSeeking) seekVideo(e.clientX); });
-    vSeek.addEventListener("pointerup", () => { isVSeeking = false; });
-    // --- نهاية مشغل الفيديو ---
+    playBtn.addEventListener("click", ()=>{ audio.paused ? audio.play().catch(()=>{}) : audio.pause(); });
 
     function seekTo(clientX){
       const r = seek.getBoundingClientRect();
@@ -700,7 +602,6 @@
     closeOverlay.addEventListener("click", closeIt);
     overlay.addEventListener("click", (e)=>{ if(e.target === overlay) closeIt(); });
 
-    // خلفية القلوب
     const canvas = document.getElementById("hearts");
     const ctx = canvas.getContext("2d");
     let W=0,H=0, DPR=1;
@@ -743,14 +644,14 @@
 
         const grad = ctx.createLinearGradient(h.x-h.s, h.y-h.s, h.x+h.s, h.y+h.s);
         if(h.c){
-          grad.addColorStop(0, `rgba(255,77,166,${h.a})`);
-          grad.addColorStop(1, `rgba(139,92,246,${h.a*0.9})`);
+          grad.addColorStop(0, `rgba(255,30,30,${h.a})`);
+          grad.addColorStop(1, `rgba(155,0,0,${h.a*0.9})`);
         }else{
-          grad.addColorStop(0, `rgba(139,92,246,${h.a})`);
-          grad.addColorStop(1, `rgba(34,211,238,${h.a*0.8})`);
+          grad.addColorStop(0, `rgba(155,0,0,${h.a})`);
+          grad.addColorStop(1, `rgba(255,77,77,${h.a*0.8})`);
         }
         ctx.fillStyle = grad;
-        ctx.shadowColor = "rgba(255,77,166,.18)";
+        ctx.shadowColor = "rgba(255,30,30,.18)";
         ctx.shadowBlur = 18*DPR;
 
         ctx.save();
